@@ -64,16 +64,3 @@ nasaP <- function(xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4, 
     }
   }
 }
-
-nasaP(35.5, -1.5 , 37.5, 1.0, "2020-01-01", "2020-01-30", "T10M", "T2M", "RH2M", tr = 0.00833)
-
-# library(leaflet)
-# ## Plot on Leaflet
-# leaflet() %>%
-#   addTiles() %>% # Add default OpenStreetMap map tiles
-#   # addRasterImage(raster(full.dataset$datacube[[1]]), colors = rev(terrain.colors(10)), opacity = 0.8, project = FALSE) %>%
-#   # addRasterImage(mask(raster(d$datacube[[1]]), st_as_sf(aoi$geometry)),
-#   #                colors = rev(terrain.colors(10)), opacity = 0.8, project = FALSE) %>%
-#   # addPolygons(data = aoi$geometry, weight = 2, fillColor = 'transparent')
-#   addRasterImage(r, colors = rev(terrain.colors(10)), opacity = 0.8, project = FALSE) %>%
-#   addMarkers(data = d$geometry)
