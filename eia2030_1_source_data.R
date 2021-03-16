@@ -64,4 +64,3 @@ nasaP <- function(xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4, 
     }
   }
 }
-a
