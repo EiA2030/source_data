@@ -1,5 +1,5 @@
 ## Access NASA POWER API
-nasaP <- function(xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4, tr){ # For the moment 4 parameters. This can be extended later, or make it more flexible to allow the user to select parameters.
+nasaP <- function(tr, xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4){ # For the moment 4 parameters. This can be extended later, or make it more flexible to allow the user to select parameters.
   require(nasapower)
   require(sf)
   require(raster)
@@ -37,7 +37,7 @@ nasaP <- function(xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4, 
   assign("points", pnt, envir = .GlobalEnv)
 # Create new objects for each parameter selected  
   lapply(names(pnt)[!grepl(paste(c("YYYYMMDD","geometry"), collapse="|"), names(pnt))], function(x) assign(x, pnt[c("YYYYMMDD",x)], envir = .GlobalEnv))
-  n <- 0
+  n <- 1
 # Rasterize the sf of each parameter at a selected resolution (tr)
   for(i in names(pnt)[!grepl(paste(c("YYYYMMDD", "geometry"), collapse="|"), names(pnt))]){
     r <- raster(ext = extent(st_bbox(pnt)) + 0.5, crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0", resolution = 0.5)
@@ -56,7 +56,7 @@ nasaP <- function(xmin, ymin, xmax, ymax, sdate, edate, par1, par2, par3, par4, 
       crs(ras) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
       ras <- resample(ras, r, method = "bilinear")
       st <- stack(st,ras)
-      # names(st[[n]]) <- as.character(k) # https://stackoverflow.com/questions/36844460/why-does-r-add-an-x-when-renaming-raster-stack-layers
+      names(st[[n]]) <- as.character(k) # https://stackoverflow.com/questions/36844460/why-does-r-add-an-x-when-renaming-raster-stack-layers
 # Create RasterStack of each object       
       assign(paste0(i), st , envir = .GlobalEnv)
       remove(vals,ras)
