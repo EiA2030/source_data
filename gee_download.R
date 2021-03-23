@@ -20,14 +20,18 @@ colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   chirps <- chirps$map(clipAOI)
   
   # Save images into directory
-  ee_imagecollection_to_local(ic = chirps, region = aoi, dsn = "CHIRPS_", maxPixels = 1e13, scale = tr)
+  ee_imagecollection_to_local(ic = chirps, region = aoi, dsn = "CHIRPS_", maxPixels = 1e13)
 
   # Build Multi-Band Raster with the stored images (then delete them)
+  r <- raster(ext = extent(st_bbox(c(xmin = xmin, xmax = xmax, ymax = ymax, ymin = ymin), crs = st_crs(4326))) + 0.5,
+              crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
+              resolution = tr)
   st <- stack()
   n <- 1
   #Create RasterStack
   for(i in list.files(pattern = ".tif")) {
-    r <- raster(i)
+    ras <- raster(i)
+    r <- resample(ras, r, method = "bilinear")
     st <- stack(st,r)
     names(st[[n]]) <- as.character(tools::file_path_sans_ext(i))
     file.remove(i)
@@ -35,7 +39,12 @@ colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   }
   
   #Save Multi-Band Raster
-  writeRaster(brick(st), "CHIRPS.tif", format = "GTiff", options = c("COMPRESS=LZW", "INTERLEAVE=BAND"), bandorder = 'BIL', progress = "text")
+  writeRaster(brick(st),
+              "gee_download.tif",
+              format = "GTiff",
+              options = c("COMPRESS=LZW", "INTERLEAVE=BAND"),
+              bandorder = 'BIL',
+              progress = "text")
 }
 
 # Example: 
