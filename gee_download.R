@@ -1,6 +1,7 @@
 colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   require(rgee)
   require(sf)
+  require(raster)
   
   # Initialize GEE
   ee_Initialize(drive = TRUE)
@@ -8,13 +9,10 @@ colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   # Load an image collection
   chirps <- ee$ImageCollection(imagecollection)$
     filterDate(sdate, edate)
-    # filterDate("2020-01-01", "2020-01-03")
 
   # Create a Bounding Box for the Area of Interest (AOI)  
-  # aoi <- list(st_bbox(c(xmin = xmin, xmax = xmax, ymax = ymax, ymin = ymin), crs = st_crs(4326)))[[1]]
-  aoi <- list(st_bbox(c(xmin = 36, xmax = 37, ymax = -2, ymin = -1), crs = st_crs(4326)))[[1]]
-  aoi <- ee$Geometry$BBox(aoi[[1]],aoi[[2]],aoi[[3]],aoi[[4]])
-  
+  aoi <- ee$Geometry$BBox(xmin, ymin, xmax, ymax)
+
   # Clip images to defined AOI
   clipAOI <- function(image) {
     return(image$clip(aoi))
@@ -23,7 +21,7 @@ colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   
   # Save images into directory
   ee_imagecollection_to_local(ic = chirps, region = aoi, dsn = "CHIRPS_", maxPixels = 1e13, scale = tr)
-  
+
   # Build Multi-Band Raster with the stored images (then delete them)
   st <- stack()
   n <- 1
@@ -37,7 +35,8 @@ colGEE <- function(imagecollection, tr, xmin, ymin, xmax, ymax, sdate, edate){
   }
   
   #Save Multi-Band Raster
-  writeRaster(st,"CHIRPS.tif", format="GTiff", options="INTERLEAVE=BAND",)
+  writeRaster(brick(st), "CHIRPS.tif", format = "GTiff", options = c("COMPRESS=LZW", "INTERLEAVE=BAND"), bandorder = 'BIL', progress = "text")
 }
 
-colGEE("UCSB-CHG/CHIRPS/DAILY", 0.05, 36, -2, 37, 1, "2020-01-01", "2020-01-10")
+# Example: 
+colGEE("UCSB-CHG/CHIRPS/DAILY", 0.025, 36, -2, 37, -1, "2020-01-01", "2020-01-10")
