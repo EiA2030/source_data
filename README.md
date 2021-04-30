@@ -51,10 +51,10 @@ Most of agronomic decisions depend on available data on soil health or soil char
 Google Earth Engine's public data catalog includes a variety of standard Earth science datasets. You can import these datasets into your script environment and start analyzing data using Google's computing resources. Results can then be exported and used on premises. Using the [``rgee`` R package](https://r-spatial.github.io/rgee/index.html) we can interact with Google Earth Engine APIs and get access to a large variety of spatio-temporal datasets including: CHIRPS, Landsat, and many others.
 Using [``daily_data_gee.R``](https://github.com/EiA2030/source_data/blob/main/R/daily_data_gee.R) and [``extract_daily_data_gee.R``](https://github.com/EiA2030/source_data/blob/main/R/extract_daily_data_gee.R) we can export results as a ``FeatureCollection`` in GeoJSON format. For example:
 1. Access CHIRPS data for precipitation information between 2018 and 2019 in Malawi:
-    daily.IC(imcol = "UCSB-CHG/CHIRPS/DAILY", band = "precipitation", sdate = "2018-01-01", edate = "2019-12-31", xmin = 34.8145177, ymin = -15.3265231, xmax = 35.3005743, ymax = -14.77034)
+    ``daily.IC(imcol = "UCSB-CHG/CHIRPS/DAILY", band = "precipitation", sdate = "2018-01-01", edate = "2019-12-31", xmin = 34.8145177, ymin = -15.3265231, xmax = 35.3005743, ymax = -14.77034)``
 2. Extract that precipitation into an operable table with dates, geometries (coordinates) and the variable of interest (in his example, precipitation).
-    zonalStats(prec, params, xmin = 34.8145177, ymin = -15.3265231, xmax = 35.3005743, ymax = -14.77034)
+    ``zonalStats(prec, params, xmin = 34.8145177, ymin = -15.3265231, xmax = 35.3005743, ymax = -14.77034)``
 3. Export results:
-    ee_table_to_gcs(x, description = "export weather data", bucket = 'your_GCS_bucket', fileNamePrefix = "points_x_", fileFormat = "GeoJSON")$start()
-    ee_monitoring(eeTaskList = T)
+    ``ee_table_to_gcs(x, description = "export weather data", bucket = 'your_GCS_bucket', fileNamePrefix = "points_x_", fileFormat = "GeoJSON")$start()``
+    ``ee_monitoring(eeTaskList = T)``
 ...
