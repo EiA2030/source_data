@@ -13,18 +13,27 @@ Gather available data and make decisions on the need for new data. This involves
 | 5 | ...                               | ...                | ...                    | ...                   |
 | 6 | ...                               | ...                | ...                    | ...                   |
 
-|    | **Soil**                          | Source             | ID                     | Platform/Tools        |
-|----|-----------------------------------|--------------------|------------------------|-----------------------|
-| 1  | N total                           | iSDA/SoilGrids     | log.n_tot_ncs_m_30m    | isda_download.R       |
-| 2  | Bulk density                      | iSDA/SoilGrids     | db_od_m_30m            | isda_download.R       |
-| 3  | Phosphorous extractable           | iSDA/SoilGrids     | log.p_mehlich3_m_30m   | isda_download.R       |
-| 4  | Bedrock depth                     | iSDA/SoilGrids     | bdr_m_30m              | isda_download.R       |
-| 5  | Calcium extractable               | iSDA/SoilGrids     | log.ca_mehlich3_m_30m  | isda_download.R       |
-| 6  | Carbon organic                    | iSDA/SoilGrids     | log.oc_m_30m           | isda_download.R       |
-| 7  | Carbon total                      | iSDA/SoilGrids     | log.c_tot_m_30m        | isda_download.R       |
-| 8  | CEC                               | iSDA/SoilGrids     | log.ecec.f_m_30m       | isda_download.R       |
-| 9  | Clay content                      | iSDA/SoilGrids     | sol_clay_tot_psa_m_30m | isda_download.R       |
-| 10 | ...                               | ...                | ...                    | ...                   |
+|    | **Soil**                          | Source         | ID                     | Platform/Tools        |
+|----|-----------------------------------|----------------|------------------------|-----------------------|
+| 1  | N total                           | iSDA           | log.n_tot_ncs_m_30m    | isda_download.R       |
+| 2  | Bulk density                      | iSDA           | db_od_m_30m            | isda_download.R       |
+| 3  | Phosphorous extractable           | iSDA           | log.p_mehlich3_m_30m   | isda_download.R       |
+| 4  | Bedrock depth                     | iSDA           | bdr_m_30m              | isda_download.R       |
+| 5  | Calcium extractable               | iSDA           | log.ca_mehlich3_m_30m  | isda_download.R       |
+| 6  | Carbon organic                    | iSDA           | log.oc_m_30m           | isda_download.R       |
+| 7  | Carbon total                      | iSDA           | log.c_tot_m_30m        | isda_download.R       |
+| 8  | CEC                               | iSDA           | log.ecec.f_m_30m       | isda_download.R       |
+| 9  | Clay content                      | iSDA           | sol_clay_tot_psa_m_30m | isda_download.R       |
+|----|-----------------------------------|----------------|------------------------|-----------------------|
+| 10 | N total                           | SoilGrids      | nitrogen               | soilgrids250_download.R |
+| 11 | Bulk density                      | SoilGrids      | bdod                   | soilgrids250_download.R |
+| 12 | CEC                               | SoilGrids      | cec                    | soilgrids250_download.R |
+| 13 | Soil pH                           | SoilGrids      | phh2o                  | soilgrids250_download.R |
+| 14 | Clay content                      | SoilGrids      | clay                   | soilgrids250_download.R |
+| 15 | Sand                              | SoilGrids      | sand                   | soilgrids250_download.R |
+| 16 | Silt                              | SoilGrids      | silt                   | soilgrids250_download.R |
+| 17 | Soil organic carbon content       | SoilGrids      | soc                    | soilgrids250_download.R |
+| 18 | ...                               | SoilGrids      | ...                    | ...                   |
 
 |   | **Crop Yield**                    | Source             | Platform               | Tools                 |
 |---|-----------------------------------|--------------------|------------------------|-----------------------|
