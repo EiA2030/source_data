@@ -24,6 +24,8 @@ soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax){
       out <- terra::mosaic(out,tif,fun="mean")
     }
   }
+  del <- list.files(getwd(), full.names = T, pattern = "tmp_*")
+  file.remove(del)
   writeRaster(out, paste(paste(par,depth,sep = "_"), ".tif", sep = ""), overwrite=TRUE)
   return(out)
 }
