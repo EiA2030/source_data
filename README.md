@@ -24,7 +24,7 @@ Gather available data and make decisions on the need for new data. This involves
 | 7  | Carbon total                      | iSDA           | log.c_tot_m_30m        | isda_download.R       |
 | 8  | CEC                               | iSDA           | log.ecec.f_m_30m       | isda_download.R       |
 | 9  | Clay content                      | iSDA           | sol_clay_tot_psa_m_30m | isda_download.R       |
-|----|-----------------------------------|----------------|------------------------|-----------------------|
+|    |                                   |                |                        |                         |
 | 10 | N total                           | SoilGrids      | nitrogen               | soilgrids250_download.R |
 | 11 | Bulk density                      | SoilGrids      | bdod                   | soilgrids250_download.R |
 | 12 | CEC                               | SoilGrids      | cec                    | soilgrids250_download.R |
