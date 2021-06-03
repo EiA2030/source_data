@@ -28,4 +28,3 @@ soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax){
   unlink(tmp)
   return(tif)
 }
-test
