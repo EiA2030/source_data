@@ -18,7 +18,7 @@ soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax){
                         tr = c(250,250),
                         projwin=bb,
                         projwin_srs=crs,
-                        verbose=TRUE)
+                        verbose=FALSE)
   tif <- project(rast(paste0(paste('tmp',par,depth, sep = '_'), '.tif')), ref)
   return(tif)
 }
