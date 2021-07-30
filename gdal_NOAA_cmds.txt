@@ -1,0 +1,4 @@
+cd /media/TRANSFORM-EGB/other
+gdalinfo flxf2022020100.01.2021072700.grb2 > info_flxf2022020100.01.2021072700.txt
+gdal_translate -b 1 flxf2022020100.01.2021072700.grb2 flxf2022020100.01.2021072700.grb2.tif
+gdalwarp -t_srs '+proj=longlat +datum=WGS84 +ellps=WGS84 +units=m +no_defs' -tr 0.0174532925199433 0.0174532925199433 -r bilinear flxf2022020100.01.2021072700.grb2.tif flxf2022020100.01.2021072700.grb2.reproj.tif

@@ -12,7 +12,15 @@ soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, path){
                     "long(",x,",",x2,")&SUBSET=",
                     "lat(",y,",",y2,")",
                     "&SUBSETTINGCRS=http://www.opengis.net/def/crs/EPSG/0/4326&OUTPUTCRS=http://www.opengis.net/def/crs/EPSG/0/4326")
-      download.file(url, paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), overwrite=TRUE)
+      tryCatch(
+        expr = {
+          download.file(url, paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), overwrite=TRUE, quiet = T)
+          message(paste("Successfully downloaded to ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), sep = ""))
+        },
+        error = function(e){
+          message(paste("Can't download in ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), sep = ""))
+        }
+      )
       out <- terra::mosaic(out,rast(paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif')),fun="mean")
       n <- n + 1
     }
