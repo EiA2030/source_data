@@ -1,7 +1,6 @@
-soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, path){
+soilgrids250_download <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, path){
   require(sf)
   require(terra)
-  out <- rast(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, res = c(0.002259887, 0.002389486))
   n <- 1
   for (x in seq(xmin, xmax, by = 2)) {
     for (y in seq(ymin, ymax, by = 2)) {
@@ -14,19 +13,21 @@ soilgrids250_data <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, path){
                     "&SUBSETTINGCRS=http://www.opengis.net/def/crs/EPSG/0/4326&OUTPUTCRS=http://www.opengis.net/def/crs/EPSG/0/4326")
       tryCatch(
         expr = {
-          download.file(url, paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), overwrite=TRUE, quiet = T)
-          message(paste("Successfully downloaded to ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), sep = ""))
+          download.file(url, paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE, quiet = T)
+          message(paste("Successfully downloaded to ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = '/'), '.tif'), sep = ""))
         },
         error = function(e){
-          message(paste("Can't download in ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif'), sep = ""))
+          message(paste("Can't download in ", paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = '/'), '.tif'), sep = ""))
         }
       )
-      out <- terra::mosaic(out,rast(paste0(paste(path,paste('tmp',par,depth,n, sep = '_'), sep = ''), '.tif')),fun="mean")
       n <- n + 1
     }
   }
-  del <- list.files(par, full.names = T)
+  del <- list.files(path, pattern =  paste('tmp',par,depth,n, sep = '_'), full.names = T)
+  rlist <- lapply(del, terra::rast)
+  rsrc <- src(rlist)
+  out <- terra::mosaic(rsrc, fun="mean")
   file.remove(del)
-  terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = ''), '.tif'), overwrite=TRUE)
+  terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
   return(out)
 }
