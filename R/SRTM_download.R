@@ -32,3 +32,5 @@ SRTM_download <- function(xmin, ymin, xmax, ymax, path){
   terra::writeRaster(out, paste0(paste(path,paste('SRTM', sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
   return(out)
 }
+# Example
+# SRTM_download(xmin = 7, ymin = 12, xmax = 11, ymax = 15, path = path/to/file)
