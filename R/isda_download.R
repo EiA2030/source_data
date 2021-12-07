@@ -9,6 +9,6 @@ isda_download <- function(par, depth, xmin, ymin, xmax, ymax){
   aoi <- terra::vect(sf::st_as_sf(sf::st_as_sfc(sf::st_bbox(c(xmin = xmin, xmax = xmax, ymax = ymax, ymin = ymin), crs = sf::st_crs(4326)))))
   tif.cog <- paste0("/vsicurl/https://s3.eu-central-1.wasabisys.com/africa-soil/layers30m/",
                     paste("sol",par,depth,"2001..2017_africa_epsg4326_v0.1.tif",sep = "_"))
-  out <- crop(terra::rast(tif.cog), aoi)
+  out <- terra::crop(terra::rast(tif.cog), aoi)
   return(out)
 }
