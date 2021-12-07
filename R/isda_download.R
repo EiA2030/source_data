@@ -5,7 +5,7 @@
     # par: See README.md --> https://github.com/EiA2030/source_data/blob/main/README.md
     # depth: Depth of the layer to request. Can be 0-20cm OR 20-50cm
     # xmin,ymin,xmax,ymax: Bounding Box parameters to defne the spatial extent of the request 
-isda_data <- function(par, depth, xmin, ymin, xmax, ymax){
+isda_download <- function(par, depth, xmin, ymin, xmax, ymax){
   aoi <- terra::vect(st_as_sf(st_as_sfc(st_bbox(c(xmin = xmin, xmax = xmax, ymax = ymax, ymin = ymin), crs = st_crs(4326)))))
   tif.cog <- paste0("/vsicurl/https://s3.eu-central-1.wasabisys.com/africa-soil/layers30m/",
                     paste("sol",par,depth,"2001..2017_africa_epsg4326_v0.1.tif",sep = "_"))
