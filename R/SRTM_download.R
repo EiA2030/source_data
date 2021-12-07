@@ -7,10 +7,10 @@ SRTM_download <- function(xmin, ymin, xmax, ymax, path){
       x2 = x + 2
       y2 = y + 2
       url <- paste('https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1',
-                   '&south=', x,
-                   '&north=', x2,
-                   '&west=', y,
-                   '&east=', y2,
+                   '&south=', y,
+                   '&north=', y2,
+                   '&west=', x,
+                   '&east=', x2,
                    '&outputFormat=GTiff', sep = '')
       tryCatch(
         expr = {
