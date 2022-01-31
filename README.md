@@ -33,7 +33,9 @@ Gather available data and make decisions on the need for new data. This involves
 | 15 | Sand                              | SoilGrids      | sand                   | soilgrids250_download.R |
 | 16 | Silt                              | SoilGrids      | silt                   | soilgrids250_download.R |
 | 17 | Soil organic carbon content       | SoilGrids      | soc                    | soilgrids250_download.R |
-| 18 | ...                               | SoilGrids      | ...                    | ...                   |
+| 18 | ...                               | SoilGrids      | ...                    | ...                     |
+
+#### Depth can be either "0..20cm" or "20..50cm"
 
 |   | **Crop Yield**                    | Source             | Platform               | Tools                 |
 |---|-----------------------------------|--------------------|------------------------|-----------------------|
