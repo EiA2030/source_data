@@ -12,3 +12,5 @@ isda_download <- function(par, depth, xmin, ymin, xmax, ymax){
   out <- terra::crop(terra::rast(tif.cog), aoi)
   return(out)
 }
+# Example
+# isda_download(par = "log.n_tot_ncs_m_30m", depth = "0..20cm", xmin = 7, xmax = 10, ymin = 10, ymax = 13)
