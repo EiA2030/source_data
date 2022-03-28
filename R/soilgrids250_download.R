@@ -32,4 +32,4 @@ soilgrids250_download <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, pa
   return(out)
 }
 # Example
-soilgrids250_download(par = "soc", depth = "5-15", xmin = 7, ymin = 12, xmax = 11, ymax = 15, path = tempdir())
+# soilgrids250_download(par = "soc", depth = "5-15", xmin = 7, ymin = 12, xmax = 11, ymax = 15, path = tempdir())
