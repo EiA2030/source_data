@@ -23,13 +23,13 @@ soilgrids250_download <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, pa
       n <- n + 1
     }
   }
-#  del <- list.files(path, pattern =  paste('tmp',par,depth, sep = '_'), full.names = T)
-#  rlist <- lapply(del, terra::rast)
-#  rsrc <- sprc(rlist)
-#  out <- terra::mosaic(rsrc, fun="mean")
-#  terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
-#  file.remove(del)
-#  return(out)
+  del <- list.files(path, pattern =  paste('tmp',par,depth, sep = '_'), full.names = T)
+  rlist <- lapply(del, terra::rast)
+  rsrc <- sprc(rlist)
+  out <- terra::mosaic(rsrc, fun="mean")
+  terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
+  file.remove(del)
+  return(out)
 }
 # Example
 # soilgrids250_download(par = "soc", depth = "5-15", xmin = 7, ymin = 12, xmax = 11, ymax = 15, path = tempdir())
