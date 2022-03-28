@@ -28,7 +28,7 @@ soilgrids250_download <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, pa
   rsrc <- sprc(rlist)
   out <- terra::mosaic(rsrc, fun="mean")
   terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
-  file.remove(del)
+#  file.remove(del)
   return(out)
 }
 # Example
