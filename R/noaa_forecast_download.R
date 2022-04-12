@@ -1,7 +1,6 @@
 download.noaa <- function(noaa.folder) {
   url <- paste0("https://www.ncei.noaa.gov/data/climate-forecast-system/access/operational-9-month-forecast/6-hourly-flux")
   add.months <- function(date,n) seq(date, by = paste (n, "months"), length = 2)[2]
-  # system("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/*")
   system(paste0("rm -r -f ", noaa.folder, "/*"))
   dir.create(paste0(noaa.folder,"/process/"), showWarnings = FALSE)
   dir.create(paste0(noaa.folder,"/raw/"), showWarnings = FALSE)
