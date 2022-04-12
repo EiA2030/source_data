@@ -1,9 +1,10 @@
-download.noaa <- function() {
+download.noaa <- function(noaa.folder) {
   url <- paste0("https://www.ncei.noaa.gov/data/climate-forecast-system/access/operational-9-month-forecast/6-hourly-flux")
   add.months <- function(date,n) seq(date, by = paste (n, "months"), length = 2)[2]
-  system("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/*")
-  dir.create("/media/TRANSFORM-EGB/other/NOAA_data/process/", showWarnings = FALSE)
-  dir.create("/media/TRANSFORM-EGB/other/NOAA_data/raw/", showWarnings = FALSE)
+  # system("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/*")
+  system(paste0("rm -r -f ", noaa.folder, "/*"))
+  dir.create(paste0(noaa.folder,"/process/"), showWarnings = FALSE)
+  dir.create(paste0(noaa.folder,"/raw/"), showWarnings = FALSE)
   for (i in as.list(seq(Sys.Date()-4, add.months(Sys.Date()-4, 6), by = "day"))) {
     year <- format(as.Date(Sys.Date()-4, format="%d/%m/%Y"),"%Y")
     month <- format(as.Date(Sys.Date()-4, format="%d/%m/%Y"),"%m")
@@ -22,7 +23,7 @@ download.noaa <- function() {
                         "flxf", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".grb2")
         tryCatch(
           expr = download.file(url = files,
-                               destfile = paste0("/media/TRANSFORM-EGB/other/NOAA_data/raw/","flxf", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".grb2"),
+                               destfile = paste0(noaa.folder,"/raw/","flxf", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".grb2"),
                                quiet = TRUE),
           error = function(e){
             message(paste("Does not exist: ", files, sep = ""))
@@ -42,15 +43,15 @@ download.noaa <- function() {
                                   ifelse(b == 31, "kg/(m^2 s)",
                                          ifelse(b == 36, "m/s",
                                                 ifelse(b == 37, "m/s","C")))))
-          dir.create(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", bname), showWarnings = FALSE)
+          dir.create(paste0(noaa.folder,"/process/", bname), showWarnings = FALSE)
           system(paste0("gdal_translate -b ",b," -co COMPRESS=LZW -co BIGTIFF=YES ",
-                        "/media/TRANSFORM-EGB/other/NOAA_data/raw/","flxf", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".grb2 ",
-                        "/media/TRANSFORM-EGB/other/NOAA_data/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
+                        noaa.folder, "/raw/","flxf", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".grb2 ",
+                        noaa.folder, "/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
           system(paste0("gdalwarp -t_srs '+proj=longlat +datum=WGS84 +ellps=WGS84 +units=m +no_defs' -tr 0.0833 0.0833 -r bilinear -co COMPRESS=LZW -co BIGTIFF=YES --config CENTER_LONG 0 -overwrite ",
-                        "/media/TRANSFORM-EGB/other/NOAA_data/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif ",
-                        "/media/TRANSFORM-EGB/other/NOAA_data/process/", bname,"/flxf_4326_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
+                        noaa.folder, "/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif ",
+                        noaa.folder, "/process/", bname,"/flxf_4326_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
           system(paste0("rm -r -f ",
-                        "/media/TRANSFORM-EGB/other/NOAA_data/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
+                        noaa.folder, "/process/", bname,"/flxf_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
           # system(paste0("gdal_edit.py -unsetmd -mo BAND_NAME=", bname, " -mo BAND_UNITS=", bunits, " ",
           #               "/media/TRANSFORM-EGB/other/NOAA_data/process/", bname,"/flxf_4326_", bname, "_", year.f, month.f, day.f, t.f, ".01.", year, month, day, t,".tif"))
         }
@@ -58,75 +59,75 @@ download.noaa <- function() {
     }
     for (band in c("radl", "prec", "winu", "temp", "tmax", "tmin")) {
       if (band == "radl") {
-        dir.create(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/srad"), showWarnings = FALSE)
+        dir.create(paste0(noaa.folder, "/process/srad"), showWarnings = FALSE)
         short <- "rads"
-        l.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band),
+        l.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         l.avg <- tapp(rast(raster::stack(l.files)), fun = mean, index = 1)
-        s.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", short),
+        s.files <- list.files(paste0(noaa.folder, "/process/", short),
                               pattern = paste0("flxf_4326_", short, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         s.avg <- tapp(rast(raster::stack(s.files)), fun = mean, index = 1)
         avg <- l.avg + s.avg
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", "srad", "/", "noaa_", "srad", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", "srad", "/", "noaa_", "srad", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Solar Net Radiation [W/(m^2)] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", short))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", short))
       } else if (band == "winu") {
-        dir.create(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/wind"), showWarnings = FALSE)
+        dir.create(paste0(noaa.folder, "/process/wind"), showWarnings = FALSE)
         v <- "winv"
-        u.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band),
+        u.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         u.avg <- tapp(rast(raster::stack(u.files)), fun = mean, index = 1)
-        v.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", v),
+        v.files <- list.files(paste0(noaa.folder, "/process/", v),
                               pattern = paste0("flxf_4326_", v, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         v.avg <- tapp(rast(raster::stack(v.files)), fun = mean, index = 1)
         avg <- sqrt(u.avg^2 + v.avg^2)
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", "wind", "/", "noaa_", "wind", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", "wind", "/", "noaa_", "wind", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Wind Speed [m/s] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", v))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", v))
       } else if (band == "prec") {
-        p.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band, ""),
+        p.files <- list.files(paste0(noaa.folder, "/process/", band, ""),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         avg <- tapp(rast(raster::stack(p.files)), fun = sum, index = 1)*86400
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Precipitation [mm] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/flxf_4326_*"))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
       } else if (band == "temp") {
-        dir.create(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/vapr"), showWarnings = FALSE)
-        t.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band),
+        dir.create(paste0(noaa.folder, "/process/vapr"), showWarnings = FALSE)
+        t.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
         avg <- tapp(rast(raster::stack(t.files)), fun = mean, index = 1)
         vapr <- 0.6121*exp((18.678-(avg/234.5))*(avg/(257.14+avg)))
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature [C] ", year.f, month.f, day.f))
-        terra::writeRaster(vapr, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/vapr/noaa_vapr_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(vapr, paste0(noaa.folder, "/vapr/noaa_vapr_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Water vapor pressure [kPa] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/flxf_4326_*"))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
       } else if (band == "tmax") {
-        tmax.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band),
+        tmax.files <- list.files(paste0(noaa.folder, "/process/", band),
                                  pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                                  full.names = TRUE)
         avg <- tapp(rast(raster::stack(tmax.files)), fun = max, index = 1)
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature Maximum [C] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/flxf_4326_*"))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
       } else {
-        tmin.files <- list.files(paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band),
+        tmin.files <- list.files(paste0(noaa.folder, "/process/", band),
                                  pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                                  full.names = TRUE)
         avg <- tapp(rast(raster::stack(tmin.files)), fun = min, index = 1)
-        terra::writeRaster(avg, paste0("/media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature Minimum [C] ", year.f, month.f, day.f))
-        system(paste0("rm -r -f /media/TRANSFORM-EGB/other/NOAA_data/process/", band, "/flxf_4326_*"))
+        system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
       }
     }
   }
 }
-download.noaa()
+download.noaa(noaa.folder = "path/to/NOAA_data")
