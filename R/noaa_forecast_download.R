@@ -63,11 +63,11 @@ download.noaa <- function(noaa.folder) {
         l.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        l.avg <- tapp(rast(raster::stack(l.files)), fun = mean, index = 1)
+        l.avg <- terra::tapp(terra::rast(l.files), fun = mean, index = 1)
         s.files <- list.files(paste0(noaa.folder, "/process/", short),
                               pattern = paste0("flxf_4326_", short, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        s.avg <- tapp(rast(raster::stack(s.files)), fun = mean, index = 1)
+        s.avg <- terra::tapp(terra::rast(s.files), fun = mean, index = 1)
         avg <- l.avg + s.avg
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", "srad", "/", "noaa_", "srad", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Solar Net Radiation [W/(m^2)] ", year.f, month.f, day.f))
@@ -79,11 +79,11 @@ download.noaa <- function(noaa.folder) {
         u.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        u.avg <- tapp(rast(raster::stack(u.files)), fun = mean, index = 1)
+        u.avg <- terra::tapp(terra::rast(u.files), fun = mean, index = 1)
         v.files <- list.files(paste0(noaa.folder, "/process/", v),
                               pattern = paste0("flxf_4326_", v, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        v.avg <- tapp(rast(raster::stack(v.files)), fun = mean, index = 1)
+        v.avg <- terra::tapp(terra::rast(v.files), fun = mean, index = 1)
         avg <- sqrt(u.avg^2 + v.avg^2)
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", "wind", "/", "noaa_", "wind", "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Wind Speed [m/s] ", year.f, month.f, day.f))
@@ -93,7 +93,7 @@ download.noaa <- function(noaa.folder) {
         p.files <- list.files(paste0(noaa.folder, "/process/", band, ""),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        avg <- tapp(rast(raster::stack(p.files)), fun = sum, index = 1)*86400
+        avg <- terra::tapp(terra::rast(p.files), fun = sum, index = 1)*86400
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Precipitation [mm] ", year.f, month.f, day.f))
         system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
@@ -102,18 +102,18 @@ download.noaa <- function(noaa.folder) {
         t.files <- list.files(paste0(noaa.folder, "/process/", band),
                               pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                               full.names = TRUE)
-        avg <- tapp(rast(raster::stack(t.files)), fun = mean, index = 1)
+        avg <- terra::tapp(terra::rast(t.files), fun = mean, index = 1)
         vapr <- 0.6121*exp((18.678-(avg/234.5))*(avg/(257.14+avg)))
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature [C] ", year.f, month.f, day.f))
-        terra::writeRaster(vapr, paste0(noaa.folder, "/vapr/noaa_vapr_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
+        terra::writeRaster(vapr, paste0(noaa.folder, "/process/vapr/noaa_vapr_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Water vapor pressure [kPa] ", year.f, month.f, day.f))
         system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
       } else if (band == "tmax") {
         tmax.files <- list.files(paste0(noaa.folder, "/process/", band),
                                  pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                                  full.names = TRUE)
-        avg <- tapp(rast(raster::stack(tmax.files)), fun = max, index = 1)
+        avg <- terra::tapp(terra::rast(tmax.files), fun = max, index = 1)
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature Maximum [C] ", year.f, month.f, day.f))
         system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
@@ -121,7 +121,7 @@ download.noaa <- function(noaa.folder) {
         tmin.files <- list.files(paste0(noaa.folder, "/process/", band),
                                  pattern = paste0("flxf_4326_", band, "_", year.f, month.f, day.f),
                                  full.names = TRUE)
-        avg <- tapp(rast(raster::stack(tmin.files)), fun = min, index = 1)
+        avg <- terra::tapp(terra::rast(tmin.files), fun = min, index = 1)
         terra::writeRaster(avg, paste0(noaa.folder, "/process/", band, "/", "noaa_", band, "_4326_", year.f, month.f, day.f, "_", year, month, day, ".tif"),
                            datatype = "FLT4S", filetype = "GTiff", gdal = c("BIGTIFF=YES"), names = paste0("Temperature Minimum [C] ", year.f, month.f, day.f))
         system(paste0("rm -r -f ", noaa.folder, "/process/", band, "/flxf_4326_*"))
@@ -129,4 +129,6 @@ download.noaa <- function(noaa.folder) {
     }
   }
 }
-download.noaa(noaa.folder = "path/to/NOAA_data")
+
+# # Example
+# download.noaa(noaa.folder = "path/to/NOAA_data")
