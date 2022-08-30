@@ -7,7 +7,7 @@
 #' gadm41.download(iso = "MOZ")
 
 gadm36.download <- function(iso = NULL, path = tempdir()){
-  dir.create(paste(path, "raw", sep = "/"))
+  dir.create(paste(path, "raw", sep = "/"), showWarnings = TRUE)
   url <- paste0("https://geodata.ucdavis.edu/gadm/gadm3.6/gpkg/gadm36_", iso, "_gpkg.zip")
   download.file(url, destfile = paste0(path,"/raw/gadm36_", iso, "_gpkg.zip"))
   unzip(paste0(path,"/raw/gadm36_", iso, "_gpkg.zip"), exdir = path)
@@ -21,7 +21,7 @@ gadm36.download <- function(iso = NULL, path = tempdir()){
 }
 
 gadm41.download <- function(iso = NULL, path = tempdir()){
-  dir.create(paste(path, "raw", sep = "/"))
+  dir.create(paste(path, "raw", sep = "/"), showWarnings = TRUE)
   url <- paste0("https://geodata.ucdavis.edu/gadm/gadm4.1/gpkg/gadm41_", iso, "_gpkg.zip")
   download.file(url, destfile = paste0(path,"/raw/gadm41_", iso, "_gpkg.zip"))
   unzip(paste0(path,"/raw/gadm41_", iso, "_gpkg.zip"), exdir = path)
