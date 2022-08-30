@@ -24,12 +24,10 @@ gadm41.download <- function(iso = NULL, path = tempdir()){
   dir.create(paste(path, "raw", sep = "/"), showWarnings = TRUE)
   url <- paste0("https://geodata.ucdavis.edu/gadm/gadm4.1/gpkg/gadm41_", iso, ".gpkg")
   download.file(url, destfile = paste0(path,"/raw/gadm41_", iso, ".gpkg"))
-  # unzip(paste0(path,"/raw/gadm41_", iso, "_gpkg.zip"), exdir = path)
-  for (l in sf::st_layers(paste0(path,"/raw/gadm41_", iso, ".gpkg")[1])) {
+  for (l in sf::st_layers(paste0(path,"/raw/gadm41_", iso, ".gpkg"))[[1]]) {
     for (k in l) {
-      pol <- sf::st_read(fname, layer = k, quiet = T)
+      pol <- sf::st_read(paste0(path,"/raw/gadm41_", iso, ".gpkg"), layer = k, quiet = T)
       if(isFALSE(sf::st_is_valid(pol))){sf::sf_write(obj = sf::st_make_valid(pol), dsn = l, layer = k, append = FALSE)}
     }
   }
-  return(NULL)
 }
