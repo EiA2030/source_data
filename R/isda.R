@@ -7,7 +7,6 @@ isda <- function(df = NULL){
            "zinc_extractable"="log.zn_mehlich3","magnesium_extractable"="log.mg_mehlich3","calcium_extractable"="log.ca_mehlich3",
            "aluminium_extractable"="log.al_mehlich3","iron_extractable"="log.fe_mehlich3","sulphur_extractable"="log.s_mehlich3",
            "cation_exchange_capacity"="log.ecec.f")
-  # url <- "/vsicurl/https://s3.eu-central-1.wasabisys.com/africa-soil/layers30m/"
   url <- "~/common_data/isda/raw/"
   aoi <- suppressWarnings(terra::vect(sf::st_as_sf(sf::st_as_sfc(sf::st_bbox(c(xmin = min(df[,1]), xmax = max(df[,1]), ymax = max(df[,2]), ymin = min(df[,2])), crs = sf::st_crs(4326))))))
   out <- df
@@ -31,15 +30,6 @@ isda <- function(df = NULL){
             else if (par == "log.n_tot_ncs"){val <- expm1(val / 100)}
             else if (par == "ph_h2o"){val <- val / 10}
             else val <- val
-            # val <- if (par %in% c(che, "stone_content")){expm1(val / 10)}
-            #        else if (par == "db_od"){(val / 100)}
-            #        else if (par == "nitrogen_total"){expm1(val / 100)}
-            #        else if (par == "ph"){val / 10}
-            #        else val
-            
-            # val <- ifelse(par %in% (che), expm1(val / 10),
-            #               ifelse(par == "db_od", (val / 100),
-            #                      ifelse(par == "nitrogen_total", expm1(val / 100), val)))
             vals <- c(vals, val)
         }
         out <- cbind(out, vals)
