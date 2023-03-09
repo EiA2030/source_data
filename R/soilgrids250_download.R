@@ -45,7 +45,7 @@ soilgrids250_download <- function(par, depth = '0-5', xmin, ymin, xmax, ymax, pa
   out <- terra::mosaic(rsrc, fun="mean")
   terra::writeRaster(out, paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif'), overwrite=TRUE)
   file.remove(del)
-  return(out)
+  return(terra::rast(paste0(paste(path,paste(par,depth, sep = '_'), sep = '/'), '.tif')))
    }else{
     getvalues <- NULL
     for(i in 1:length(rlist)){
